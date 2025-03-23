@@ -1,6 +1,7 @@
 # CDS524_ICD_classification
 
-This is a case text classification project that uses the 2025 Alibaba Tianchi Competition Chinese electronic medical record ICD diagnosis coding evaluation dataset to compare SVM and pre-trained BERT
+This is a case text classification project that uses the 2025 Alibaba Tianchi Competition Chinese electronic medical record ICD diagnosis coding evaluation dataset to compare SVM and pre-trained BERT. All codes run on Colab
+
 
 Team Leader：ZHONG Cheng
 
