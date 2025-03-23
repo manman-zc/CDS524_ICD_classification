@@ -7,7 +7,7 @@ Team Leader：ZHONG Cheng
 
 Teammates：ZHU Ruichen；CHENG Zhenkai；TIAN Run； XU Xin
 
-ui.py run：You need to use the command **streamlit run ui.py in cmd**
+ui.py run：You need to use the command **streamlit run ui.py** in cmd
 
 our BERT pth: https://drive.google.com/file/d/1VjJkoWojffasBJfQ3TEa6xy7tgB_XYTi/view?usp=drive_link
 
