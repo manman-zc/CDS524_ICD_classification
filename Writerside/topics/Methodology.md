@@ -53,7 +53,7 @@
 由于原始电子病历文本数据包含大量非结构化信息，需要进行预处理才能用于模型训练。本研究采用以下预处理步骤：
 
 1.  **文本合并**：将主诉、现病史、入院情况、入院诊断中序号为1的文本、诊疗经过和出院情况合并为主要诊断的文本，将既往史、个人史、婚姻史、家族史、入院诊断除序号为1的文本、出院医嘱合并为其他诊断文本。
-2.  **实体抽取与关系抽取**：使用PaddleNLP中针对医疗文本处理的实体抽取与关系抽取的功能，抽取文本中的实体，包括疾病、症状、检查项目、治疗方法、身体部位、发病时间、药物和手术等。
+2.  **实体抽取与关系抽取**：使用PaddleNLP中针对医疗文本处理的实体抽取与关系抽取的功能，抽取文本中的实体，包括疾病、症状、检查项目、治疗方法、身体部位、发病时间、药物和手术等。**[6]**
 
 经过预处理后，电子病历文本被转换为结构化的数据，可以更好地用于模型训练。
 
@@ -71,7 +71,7 @@
 
 ### 3.3.1 模型选择
 
-本研究选择BERT模型作为基础模型。BERT（Bidirectional Encoder Representations from Transformers）是一种预训练的深度学习模型，在自然语言处理领域取得了state-of-the-art的效果 **[1]**。BERT模型通过Transformer的Encoder结构，能够捕捉文本中的上下文信息，从而更好地理解文本的语义。
+本研究选择BERT模型作为基础模型。BERT（Bidirectional Encoder Representations from Transformers）是一种预训练的深度学习模型，在自然语言处理领域取得了state-of-the-art的效果 **[2]**。BERT模型通过Transformer **[5]** 的Encoder结构，能够捕捉文本中的上下文信息，从而更好地理解文本的语义。
 
 此外，为了验证深度学习模型的优势，我们选择支持向量机（Support Vector Machine, SVM）作为基线方法。SVM是一种经典的监督学习算法，在文本分类任务中表现良好。通过将文本特征映射到高维空间，SVM能够找到最优的分类超平面，实现文本的分类。在本研究中，我们使用TF-IDF（Term Frequency-Inverse Document Frequency）特征提取方法，将文本转换为向量表示，然后使用这些特征向量训练SVM模型。
 
@@ -128,13 +128,3 @@ Acc = \frac{1}{N} \sum_{i=1}^{N} \left\{ 0.5 \cdot I(\hat{y}_{main} == y_{main})
 $$
 
 其中，$I(\cdot)$为指示函数，满足条件返回1，否则返回0，$\hat{y}_{main}$和$y_{main}$分别表示主诊断编码的预测标签和真实标签；$NUM(x)$代表数量函数，用来计算$x$的数量，$\hat{y}_{other}$和$y_{other}$分别表示其他诊断编码的预测标签集和真实标签集；$N$为测试样本的数量，$\left\{\cdot\right\}_{i}$为第$i$个中文电子病历的预测准确率。
-
-
-## 参考文献
-
-[1] Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2018). Bert: Pre-training of deep bidirectional transformers for language understanding. *arXiv preprint arXiv:1810.04805*.
-
-[2] Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., ... & Polosukhin, I. (2017). Attention is all you need. *Advances in neural information processing systems*, *30*.
-
-[3]  PaddleNLP: 飞桨自然语言处理工具集. https://github.com/PaddlePaddle/PaddleNLP
-

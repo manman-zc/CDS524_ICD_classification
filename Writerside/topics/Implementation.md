@@ -6,7 +6,7 @@
 
 ### 4.1.1 SVM方法实现
 
-支持向量机(SVM)作为一种经典且高效的机器学习算法，在文本分类任务中表现出色[1]。本研究中，SVM实现的主要步骤如下：
+支持向量机(SVM)作为一种经典且高效的机器学习算法，在文本分类任务中表现出色[7]。本研究中，SVM实现的主要步骤如下：
 
 1. **特征提取**：采用TF-IDF (Term Frequency-Inverse Document Frequency)方法提取文本特征。选择了5000个最具代表性的特征，将非结构化的病历文本转换为机器学习算法可处理的向量表示。
    
@@ -65,7 +65,7 @@ $$
 
 ### 4.3.2 不确定性加权损失函数
 
-为处理单标签和多标签分类任务之间的平衡问题，我们实现了Kendall等人[4]提出的不确定性加权损失函数(Uncertainty to Weigh Losses)。这种方法允许模型自动学习每个任务的最优权重，而不需要手动调整。
+为处理单标签和多标签分类任务之间的平衡问题，我们实现了Kendall等人[8]提出的不确定性加权损失函数(Uncertainty to Weigh Losses)。这种方法允许模型自动学习每个任务的最优权重，而不需要手动调整。
 
 具体实现如下：
 
@@ -137,6 +137,8 @@ $$
 3. **医疗记录选择与显示**：允许用户浏览和选择特定的病例记录
 4. **预测功能**：处理用户输入并生成相应的诊断编码预测
 
+![frontEnd](frontEnd.jpg)
+
 在前端系统实现过程中，我们面临了以下技术挑战并提出了相应解决方案：
 
 1. **模型加载性能问题**
@@ -156,14 +158,3 @@ $$
    - **解决方案**：利用Streamlit的响应式布局功能，并为长文本添加滚动条，确保在各种设备上都有良好的显示效果。
 
 这些解决方案显著提高了系统的可用性和用户体验，使医疗专业人员能够更有效地使用该工具进行ICD诊断编码辅助。
-
-## 参考文献
-
-[1] Joachims, T. (1998). Text categorization with support vector machines: Learning with many relevant features. In European conference on machine learning (pp. 137-142). Springer, Berlin, Heidelberg.
-
-[2] Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2018). Bert: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805.
-
-[3] Kingma, D. P., & Ba, J. (2014). Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.
-
-[4] Kendall, A., Gal, Y., & Cipolla, R. (2018). Multi-task learning using uncertainty to weigh losses for scene geometry and semantics. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 7482-7491).
-

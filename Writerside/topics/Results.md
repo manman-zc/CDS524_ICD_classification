@@ -56,7 +56,7 @@ SVM方法的表现相对较弱，这可能是因为：
 
 1. **学习效果**：随着训练的进行，训练集和验证集的准确率均呈上升趋势，证明模型有效地从数据中学习了诊断编码的模式。
 2. **峰值性能**：验证集准确率在第9个epoch达到峰值，此后虽有波动但整体趋于平稳，未见显著提升。
-3. **模型选择**：基于"早停"(early stopping)策略[1]，我们保存了验证集准确率最高的模型参数（第9个epoch）作为最终模型，这有助于提高模型在未见数据上的泛化能力。
+3. **模型选择**：基于"早停"(early stopping)策略[9]，我们保存了验证集准确率最高的模型参数（第9个epoch）作为最终模型，这有助于提高模型在未见数据上的泛化能力。
 
 训练集准确率持续上升而验证集准确率在中期达到高点后趋于稳定，这种模式符合典型的深度学习模型训练特征，表明模型已经充分学习了训练数据中的规律，并且具有良好的泛化能力。
 
@@ -74,15 +74,5 @@ SVM方法的表现相对较弱，这可能是因为：
 2. **任务平衡**：sigma值的相对稳定证明了不确定性加权损失函数成功地动态平衡了单标签分类任务和多标签分类任务，避免了任一任务主导训练过程的情况。
 3. **收敛特性**：两个sigma值在训练后期趋于稳定，表明模型已找到两个任务间的最优权重分配。
 
-这种稳定的sigma值变化表明我们的多任务学习框架成功地在保持两个任务相对独立性的同时，又实现了它们之间的协同优化，这与Kendall等人[2]提出的多任务学习理论一致。
+这种稳定的sigma值变化表明我们的多任务学习框架成功地在保持两个任务相对独立性的同时，又实现了它们之间的协同优化，这与Kendall等人[8]提出的多任务学习理论一致。
 
-
-## 参考文献
-
-[1] Prechelt, L. (1998). Early stopping-but when?. In Neural Networks: Tricks of the trade (pp. 55-69). Springer, Berlin, Heidelberg.
-
-[2] Kendall, A., Gal, Y., & Cipolla, R. (2018). Multi-task learning using uncertainty to weigh losses for scene geometry and semantics. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 7482-7491).
-
-[3] Chung, J. W., Yang, J., & Yahyavi, M. (2022). Clinical text classification with rule-based features and knowledge-guided deep learning. BMC medical informatics and decision making, 22(1), 1-15.
-
-[4] Mullenbach, J., Wiegreffe, S., Duke, J., Sun, J., & Eisenstein, J. (2018). Explainable prediction of medical codes from clinical text. arXiv preprint arXiv:1802.05695.
