@@ -49,7 +49,7 @@
 
 - Conduct in-depth research on the model to provide theoretical support for the project.
 
-## Research Specialist
+## Research Specialist 1
 
 ### CHENG Zhenkai
 
@@ -61,7 +61,7 @@
 
 - Prepare some documents and reports.
 
-## Research Specialist
+## Research Specialist 2
 
 ### TIAN Run
 
