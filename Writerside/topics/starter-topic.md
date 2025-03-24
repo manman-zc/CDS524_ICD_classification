@@ -1,1 +1,4 @@
 # Chinese electronic medical record ICD diagnosis code classification based on fine-tuning pre-trained BERT
+
+## Abstract
+In this paper, we propose an automated ICD diagnostic coding system for Chinese electronic medical records by fine-tuning pre-trained BERT models. Our approach leverages a comprehensive data preprocessing pipeline that fuses multiple clinical text sources and employs advanced natural language processing techniques to extract key medical entities. Extensive experiments conducted on a publicly available, anonymized dataset from the CCL2025 competition demonstrate that our method achieves competitive performance, with a classification accuracy of approximately 71.25% on the test set. The results highlight the advantages of deep learning in handling complex clinical texts and provide valuable insights into integrating traditional feature-based methods with modern transformer-based architectures for improved medical data management.
