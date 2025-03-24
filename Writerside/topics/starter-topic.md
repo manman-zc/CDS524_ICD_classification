@@ -1,4 +1,6 @@
 # Chinese electronic medical record ICD diagnosis code classification based on fine-tuning pre-trained BERT
 
 ## Abstract
-In this paper, we propose an automated ICD diagnostic coding system for Chinese electronic medical records by fine-tuning pre-trained BERT models. Our approach leverages a comprehensive data preprocessing pipeline that fuses multiple clinical text sources and employs advanced natural language processing techniques to extract key medical entities. Extensive experiments conducted on a publicly available, anonymized dataset from the CCL2025 competition demonstrate that our method achieves competitive performance, with a classification accuracy of approximately 71.25% on the test set. The results highlight the advantages of deep learning in handling complex clinical texts and provide valuable insights into integrating traditional feature-based methods with modern transformer-based architectures for improved medical data management.
+本研究提出了一种基于预训练BERT模型的中文电子病历ICD诊断编码自动分类系统。随着电子病历数据量的快速增长，高效准确的自动编码系统对于医疗机构管理和临床决策支持变得日益重要。针对中文医疗文本的特点和ICD编码的复杂性，我们设计了一个融合实体抽取和多任务学习的方法。首先，利用PaddleNLP对病历文本进行医疗实体抽取与关系抽取，从非结构化文本中提取关键信息；然后，基于BERT模型构建了一个前6层参数共享、后6层任务特定的双任务学习架构，同时处理主诊断单标签分类和其他诊断多标签分类问题。为解决数据不平衡的挑战，我们引入了类别权重调整和不确定性加权损失函数，有效提升了对稀有类别的识别能力。实验结果表明，我们的方法在2025年天池大赛中文电子病历ICD诊断编码评测数据集上达到了71.25%的分类准确率，显著优于传统SVM方法的59.00%。此外，我们开发了一个用户友好的交互式系统界面，支持实时预测，为临床编码工作提供便捷辅助。本研究不仅验证了深度学习在医疗文本编码中的优势，也为解决类似的医疗自然语言处理任务提供了实用方法。
+
+**关键词**：电子病历；ICD诊断编码；BERT；多任务学习；不确定性加权损失；医疗文本处理；深度学习
