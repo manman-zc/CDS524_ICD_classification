@@ -72,7 +72,7 @@ $$
 L_1 = -\frac{1}{N} \sum_{i=1}^{N} \sum_{c=1}^{C} y_{i,c} \log(\hat{p}_{i,c})
 $$
 
-#### Parameter Description:
+#### Parameter Description: {id="parameter-description_1"}
 - **N**: Total number of samples.
 - **C**: Total number of classes.
 - **y_{i,c}**: The true label for sample i in class c (usually represented in one-hot encoding).
@@ -81,7 +81,7 @@ $$
   \hat{p}_{i,c} = \text{softmax}(\text{logits1})_{i,c}
   $$
 
-#### Note:
+#### Note: {id="note_1"}
 The `softmax` function converts logits into a probability distribution, ensuring that **$\hat{p}_{i,c}$** falls within the range [0, 1].
 
 2. **Loss Function for Multi-label Classification (Weighted Binary Cross-Entropy Loss)**:
@@ -90,7 +90,7 @@ $$
 L_2 = -\frac{1}{N} \sum_{i=1}^{N} \left[ w_p \cdot y_i \cdot \log(\hat{p}_i) + (1 - y_i) \cdot \log(1 - \hat{p}_i) \right]
 $$
 
-#### Parameter Description:
+#### Parameter Description: {id="parameter-description_2"}
 - **N**: Number of samples.
 - **y_i**: The true label of the i-th sample (0 or 1).
 - **$\hat{p}_i$**: The predicted probability, computed as:
