@@ -1,19 +1,25 @@
-# Our Team
+# 9. Our Team
 
 ## Team Introduction
 - We are MultiPro, a team of five members working together to develop innovative projects.
 
-## Project Manager and Developer 1
+## Project Manager and Developer
 
 ### ZHONG Cheng
 
 **Role**: 
 
-- Oversee the entire project to ensure timelines and deliverables are met.
-- Data preprocessing.
-- Configuration and use of models.
-- Model configuration, deployment, and operation.
-- Record the implementation content.
+- Responsible for the progress and delivery of the entire project.
+
+- Experimental design.
+
+- Data cleaning and preprocessing.
+
+- Model configuration, training and verification.
+
+- Record experimental data.
+
+- Prepare some documents and reports.
 
 ## Frontend Developer
 
@@ -21,9 +27,13 @@
 
 **Role**: 
 
-- Build the front end.
-- Responsible for the connection between the front end and the model.
+- Build and optimize the front-end.
+
+- Responsible for the connection between the front-end and the model.
+
 - Create and beautify slides for project presentations.
+
+- Prepare some documents and reports.
 
 ## Documentation Specialist
 
@@ -31,8 +41,13 @@
 
 **Role**: 
 
-- Edit, summarize, create online documents and write papers for reports.
-- Conduct model selection research to help determine the project direction and planning of the team.
+- Summarize project documents.
+
+- Create and edit online documents, write complete reports and articles.
+
+- Select and study data sets and models to help determine the project direction and planning of the team.
+
+- Conduct in-depth research on the model to provide theoretical support for the project.
 
 ## Research Specialist
 
@@ -40,8 +55,10 @@
 
 **Role**: 
 
-- Conduct research on model selection to help determine the team's project direction and planning.
-- Conduct in-depth research on the model and provide theoretical support for the project.
+- Interpret the experimental results
+
+- Select and study the data set and model to help determine the project direction and planning of the team.
+
 - Prepare some documents and reports.
 
 ## Research Specialist
@@ -50,6 +67,8 @@
 
 **Role**: 
 
-- Complete testing of the system.
-- Conduct research on model selection to help determine the team's project direction and planning.
+- Summarize and summarize the project
+
+- Conduct in-depth research on the model to provide theoretical support for the project.
+
 - Prepare some documents and reports.

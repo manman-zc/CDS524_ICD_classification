@@ -1,31 +1,5 @@
 # 6. Discussion
 
-本节将对实验结果进行深入讨论，分析模型性能的影响因素，探讨研究的理论与实践意义，并指出研究的局限性及未来研究方向。
+Our study provides empirical support for the application of multi-task learning in medical text analysis, verifying the effectiveness of partial parameter sharing architecture in balancing task commonality and specificity. An automatic coding system with an accuracy of 71.25% can significantly reduce the workload of medical coders, accelerate the clinical document processing workflow, and improve the operational efficiency of medical institutions. We adopted an intuitive interface design to help medical professionals understand and use the system more easily. This real-time capability is particularly important in clinical environments, as it can improve work efficiency. The system presents the prediction results in a structured manner, making it easier for medical professionals to quickly understand and adopt, further enhancing the practical value of the system.
 
-## 6.1 优势
-
-1. **多任务学习范式的验证**：我们的研究为多任务学习在医疗文本分析中的应用提供了实证支持，验证了部分参数共享架构在平衡任务共性与特异性方面的有效性。
-
-2. **临床工作流程的改进**：准确率达71.25%的自动编码系统可以显著减轻医疗编码员的工作负担，加速临床文档处理流程，提高医疗机构的运营效率。
-
-3. **直观的用户界面**：我们采用了直观的界面设计，帮助医疗专业人员更容易理解和使用系统。下拉选择框和按钮使操作更加快捷，降低了使用门槛。
-
-4. **实时可用性**：系统能够在几秒钟内完成文本处理和预测，为医疗诊断提供及时支持。这种实时性在临床环境中尤为重要，可以提高工作效率。
-
-5. **清晰的结果展示**：系统将预测结果以结构化方式呈现，便于医疗专业人员快速理解和采纳，进一步提升了系统的实用价值。
-
-## 6.2 局限性
-
-1. **数据集规模限制**：本研究使用的数据集相对较小（800条训练样本），这可能限制了模型的泛化能力，特别是对于稀有疾病编码的识别。
-
-2. **临床实用性考量**：虽然71.25%的准确率显著优于基线方法，但在临床实践中可能仍需人工审核，这限制了系统的完全自动化应用。
-
-3. **模型复杂性与可解释性权衡**：BERT等深度学习模型通常被视为"黑盒"，缺乏可解释性，这在医疗决策支持中可能引发信任和采纳问题。
-
-4. **性能限制**：由于使用完整的BERT模型，系统在资源受限的环境中可能会遇到性能瓶颈。未来可以考虑模型量化或蒸馏以提高推理速度。
-
-5. **预测结果可解释性不足**：系统仅提供预测结果，没有解释特定预测的依据。添加模型可解释性功能可以增加医生对系统的信任。
-
-6. **批处理能力不足**：目前仅支持对单个记录进行预测，缺乏批处理能力。未来可以添加批量上传和处理功能。
-
-7. **缺乏模型更新机制**：没有内置的模型更新部分，需要手动替换模型文件。未来可以实现在线模型更新功能，使系统能够持续改进。
+However, the dataset used in this study is relatively small (800 training samples), which may limit the model's generalization ability, especially for the identification of rare disease codes. Although the accuracy of 71.25% is significantly better than the baseline method, manual review may still be required in clinical practice, limiting the fully automated application of the system. Deep learning models such as BERT are often regarded as "black boxes" and lack interpretability, which may cause trust and adoption issues in medical decision support. Due to the use of the full BERT model, the system may encounter performance bottlenecks in resource-constrained environments. Future work can consider model quantization or distillation to improve inference speed. The system only provides prediction results without explaining the basis for specific predictions. Adding model interpretability features can increase doctors' trust in the system. Currently, it only supports prediction for a single record and lacks batch processing capabilities. Future work can add batch upload and processing functions. There is no built-in model update mechanism, and model files need to be manually replaced. Future work can implement an online model update function to continuously improve the system.

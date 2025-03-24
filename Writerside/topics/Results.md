@@ -1,78 +1,75 @@
 # 5. Results
 
-本节将详细呈现本研究的实验结果，并对结果进行全面分析与讨论。我们首先展示两种方法的总体表现，然后深入分析预训练BERT模型的训练过程与性能特点。
+This section presents the experimental results in detail and provides an in-depth analysis and discussion. We first display the overall performance of the two methods, then analyze the training process and performance characteristics of the pre-trained BERT model.
 
-## 5.1 总体实验结果
+## 5.1 Overall Experimental Results
 
-表5.1展示了两种方法在中文电子病历ICD诊断编码任务上的分类准确率表现。从结果可以清晰地看出，基于预训练BERT的深度学习方法明显优于传统的SVM方法，分类准确率提高了12.25个百分点。
+Table 5.1 shows the classification accuracy of two methods on the ICD diagnosis coding task using Chinese electronic medical records. The results clearly indicate that the deep learning method based on pre-trained BERT significantly outperforms the traditional SVM method, with an improvement of 12.25 percentage points in classification accuracy.
 
-**表5.1 不同方法的实验结果比较**
+**Table 5.1 Comparison of Experimental Results for Different Methods**
 
-| 方法 | 分类准确率 |
-|------|------------|
-| SVM  | 59.00%     |
-| 预训练BERT | 71.25% |
+| Method           | Classification Accuracy |
+|------------------|-------------------------|
+| SVM              | 59.00%                  |
+| Pre-trained BERT | 71.25%                  |
 
-SVM方法的表现相对较弱，这可能是因为：
-1. TF-IDF特征无法有效捕捉文本的语义信息和上下文关系；
-2. 医疗文本中的专业术语和复杂表达使得简单的词袋模型难以准确表示；
-3. 线性SVM在处理多分类问题时的固有局限性。
+The SVM method performs relatively weakly, which may be due to:
+1. TF-IDF features not effectively capturing the semantic information and contextual relationships in text;
+2. The specialized terminology and complex expressions in medical texts making a simple bag-of-words model inadequate for accurate representation;
+3. The inherent limitations of linear SVM in handling multi-class classification problems.
 
-相比之下，预训练BERT方法显著提升了分类性能，这主要得益于：
-1. BERT模型通过预训练获得了丰富的语言知识；
-2. 双向注意力机制能够更好地理解医疗文本的上下文信息；
-3. 共享与特定任务参数相结合的架构设计有效处理了单标签与多标签分类任务的差异；
-4. 针对数据不平衡问题采取的特殊损失函数设计。
+In contrast, the pre-trained BERT method significantly improves classification performance, mainly because:
+1. The BERT model acquires abundant language knowledge through pre-training;
+2. The bidirectional attention mechanism better captures the contextual information in medical texts;
+3. The architecture that combines shared and task-specific parameters effectively handles the differences between single-label and multi-label classification tasks;
+4. A specially designed loss function is applied to address data imbalance.
 
-## 5.2 预训练BERT模型的训练分析
+## 5.2 Analysis of the Pre-trained BERT Model Training Process
 
-为了深入理解预训练BERT模型的训练过程和性能演变，我们对训练过程中的关键指标进行了可视化分析。
+To gain a deeper understanding of the training process and performance evolution of the pre-trained BERT model, key indicators during training have been visualized.
 
-### 5.2.1 损失函数变化分析
+### 5.2.1 Loss Trend Analysis
 
-图5.1展示了训练集与验证集在训练过程中的损失值变化趋势。
+Figure 5.1 illustrates the trend of loss values for both the training and validation sets during the training process.
 
 ![loss_curve.png](loss_curve.png)
 
-**图5.1 训练集与验证集的损失值变化曲线**
+**Figure 5.1 Loss Curves for the Training and Validation Sets**
 
-从损失曲线可以观察到以下几点关键发现：
+The loss curves reveal the following key observations:
+1. **Convergence Speed**: The model converges quickly in the initial epochs with a rapid drop in loss.
+2. **Training Stability**: After the 5th epoch, the training loss continues to decrease steadily while the validation loss starts fluctuating, yet overall follows a downward trend.
+3. **Onset of Overfitting**: Around the 16th epoch, the validation loss begins to rise, indicating that the model may start overfitting the training data.
 
-1. **收敛速度**：模型在前几个epoch中快速收敛，损失值迅速下降。
-2. **训练稳定性**：在第5个epoch后，训练损失继续平稳下降，而验证损失则开始呈现波动，但整体仍保持下降趋势。
-3. **过拟合时机**：约在第16个epoch时，验证损失开始出现上升趋势，这表明模型可能开始过拟合训练数据。
+Thus, selecting 16 epochs as the number of training rounds is reasonable. It ensures full utilization of the training data (processing 45 samples per epoch) and stops training before significant overfitting occurs, thereby balancing the model's learning ability and generalization performance.
 
-因此，选择16个epoch作为训练轮次是合理的，既能充分利用训练数据（每轮处理45条数据），又能在过拟合出现前及时停止训练。这种训练策略平衡了模型的学习能力与泛化能力。
+### 5.2.2 Classification Accuracy Analysis
 
-### 5.2.2 分类准确率分析
-
-图5.2展示了训练集与验证集在训练过程中的分类准确率变化。
+Figure 5.2 displays the accuracy trends for both training and validation sets throughout the training process.
 
 ![accuracy_curve.png](accuracy_curve.png)
 
-**图5.2 训练集与验证集的分类准确率变化曲线**
+**Figure 5.2 Classification Accuracy Trends for the Training and Validation Sets**
 
-从准确率曲线可以得出以下结论：
+From the accuracy curves, the following conclusions can be drawn:
+1. **Learning Effectiveness**: Both the training and validation accuracies demonstrate an upward trend as training progresses, indicating effective learning of diagnostic coding patterns from the data.
+2. **Peak Performance**: The validation accuracy peaks at the 9th epoch and then fluctuates slightly, remaining largely stable without significant further improvement.
+3. **Model Selection**: Based on the early stopping strategy [9], the model parameters at the epoch with the highest validation accuracy (the 9th epoch) were saved as the final model, which helps to enhance generalization on unseen data.
 
-1. **学习效果**：随着训练的进行，训练集和验证集的准确率均呈上升趋势，证明模型有效地从数据中学习了诊断编码的模式。
-2. **峰值性能**：验证集准确率在第9个epoch达到峰值，此后虽有波动但整体趋于平稳，未见显著提升。
-3. **模型选择**：基于"早停"(early stopping)策略[9]，我们保存了验证集准确率最高的模型参数（第9个epoch）作为最终模型，这有助于提高模型在未见数据上的泛化能力。
+The continuous increase in training accuracy coupled with an early plateau of validation accuracy is characteristic of deep learning models, demonstrating that the model has effectively captured the data patterns and possesses good generalization ability.
 
-训练集准确率持续上升而验证集准确率在中期达到高点后趋于稳定，这种模式符合典型的深度学习模型训练特征，表明模型已经充分学习了训练数据中的规律，并且具有良好的泛化能力。
+### 5.2.3 Analysis of Uncertainty Weight Parameters
 
-### 5.2.3 不确定性权重参数分析
-
-图5.3展示了不确定性加权损失函数中sigma参数在训练过程中的变化趋势。
+Figure 5.3 shows the trend of sigma values in the uncertainty-weighted loss function during training.
 
 ![sigma_curve.png](sigma_curve.png)
 
-**图5.3 不确定性加权损失中sigma值的变化曲线**
+**Figure 5.3 Trend of Sigma Values in the Uncertainty Weighted Loss**
 
-从sigma值的变化可以观察到：
+From the sigma value trends, we observe that:
+1. **Parameter Stability**: The two sigma values (σ₁ and σ₂) oscillate within a small range during training, indicating that the initial settings (σ₁ = -1, σ₂ = 1) are relatively reasonable and effectively balance the losses of the two tasks.
+2. **Task Balance**: The stable sigma values demonstrate that the uncertainty-weighted loss function successfully balances the single-label and multi-label classification tasks, preventing either task from dominating the training process.
+3. **Convergence Characteristics**: The sigma values converge in later stages of training, suggesting that the optimal weight distribution between the tasks has been achieved.
 
-1. **参数稳定性**：两个sigma值（$\sigma_1$和$\sigma_2$）在训练过程中仅在小范围内波动，表明初始设置（$\sigma_1=-1$，$\sigma_2=1$）已经相对合理，能够有效平衡两个任务的损失。
-2. **任务平衡**：sigma值的相对稳定证明了不确定性加权损失函数成功地动态平衡了单标签分类任务和多标签分类任务，避免了任一任务主导训练过程的情况。
-3. **收敛特性**：两个sigma值在训练后期趋于稳定，表明模型已找到两个任务间的最优权重分配。
-
-这种稳定的sigma值变化表明我们的多任务学习框架成功地在保持两个任务相对独立性的同时，又实现了它们之间的协同优化，这与Kendall等人[8]提出的多任务学习理论一致。
+This stable behavior of sigma values indicates that our multi-task learning framework has successfully maintained the independence of the two tasks while achieving collaborative optimization, which aligns with the multi-task learning theory proposed by Kendall et al. [8].
 

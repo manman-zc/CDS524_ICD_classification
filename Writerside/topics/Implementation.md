@@ -1,160 +1,148 @@
 # 4. Implementation
 
-本节将详细介绍两种核心实现方法——传统机器学习方法(SVM)和深度学习方法(BERT)的具体实现细节，包括模型架构、实验环境配置以及训练过程中遇到的挑战与解决方案。
+This section details the two core implementation approaches—traditional machine learning (SVM) and deep learning (BERT)—including model architecture, experimental environment configuration, and the challenges encountered along with their solutions during training.
 
-## 4.1 模型实现
+## 4.1 Model Implementation
 
-### 4.1.1 SVM方法实现
+### 4.1.1 SVM Method Implementation
 
-支持向量机(SVM)作为一种经典且高效的机器学习算法，在文本分类任务中表现出色[7]。本研究中，SVM实现的主要步骤如下：
+Support Vector Machine (SVM), as a classical and efficient machine learning algorithm, has demonstrated excellent performance in text classification tasks **[7]**. In this study, the main steps for the SVM implementation are as follows:
 
-1. **特征提取**：采用TF-IDF (Term Frequency-Inverse Document Frequency)方法提取文本特征。选择了5000个最具代表性的特征，将非结构化的病历文本转换为机器学习算法可处理的向量表示。
+1. **Feature Extraction**: TF-IDF (Term Frequency-Inverse Document Frequency) is used to extract text features. 5000 of the most representative features are selected to convert unstructured medical record texts into vector representations that can be processed by machine learning algorithms.
    
-2. **数据划分**：数据集包含800条训练数据和200条测试数据，保持了原始数据集的分布。
+2. **Data Splitting**: The dataset consists of 800 training samples and 200 test samples, maintaining the original distribution.
 
-3. **模型训练**：基于sklearn库实现SVM模型，使用线性核函数以平衡计算效率与分类性能。
+3. **Model Training**: The SVM model is implemented using the sklearn library, with a linear kernel to balance computational efficiency and classification performance.
 
-SVM方法由于其计算效率高、对小样本学习能力强的特点，作为本研究的基线模型，为评估更复杂模型的性能提供了参考标准。
+Due to its high computational efficiency and strong performance in small-sample learning, the SVM method serves as the baseline model in this study, providing a reference standard for evaluating more complex models.
 
-### 4.1.2 预训练BERT方法实现
+### 4.1.2 Pre-trained BERT Method Implementation
 
-BERT (Bidirectional Encoder Representations from Transformers)作为近年来自然语言处理领域的突破性技术[2]，其双向编码机制能够更全面地捕获文本的语义信息。本研究基于中文预训练模型bert-base-chinese进行了任务特定的微调，具体实现如下：
+BERT (Bidirectional Encoder Representations from Transformers) is a breakthrough technology in natural language processing in recent years **[2]**. Its bidirectional encoding mechanism can capture semantic information from texts more comprehensively. In this study, task-specific fine-tuning is performed on the Chinese pre-trained model bert-base-chinese, as described below:
 
-1. **模型架构设计**：采用了共享参数与任务特定参数相结合的架构设计。如图所示，BERT模型的前6层参数在两个分类任务间共享，这基于的假设是底层特征提取对不同的分类任务具有通用性；而后6层则针对两个不同的分类任务（主诊断单标签分类和其他诊断多标签分类）分别训练独立的参数，以捕获任务特定的特征。
+1. **Model Architecture Design**: A combined architecture of shared parameters and task-specific parameters is used. As illustrated, the first 6 layers of the BERT model share parameters between two classification tasks. This is based on the assumption that lower-level feature extraction is generic across different classification tasks; the subsequent 6 layers are separately trained for the two distinct classification tasks (single-label main diagnosis classification and multi-label other diagnosis classification) to capture task-specific features.
 
 ![BERT结构说明.png](BERT结构说明.png)
 
-2. **数据划分**：训练集720条，验证集80条（按9:1比例划分），测试集200条。这种划分方式确保了模型在训练过程中能够不断评估其泛化能力。
+2. **Data Splitting**: The training set contains 720 samples, the validation set 80 samples (a 9:1 split), and the test set 200 samples. This split ensures that the generalization ability of the model is continuously evaluated during training.
 
-## 4.2 实验环境配置
+## 4.2 Experimental Environment Configuration
 
-为确保研究的可复现性，详细记录了实验的软硬件环境：
+To ensure the reproducibility of the study, the software and hardware environments are documented in detail:
 
-- **计算平台**：Google Colab Pro
-- **计算资源**：NVIDIA T4 GPU (15GB显存)
-- **数据预处理框架**：
+- **Computing Platform**: Google Colab Pro
+- **Computing Resources**: NVIDIA T4 GPU (15GB VRAM)
+- **Data Preprocessing Framework**:
   - paddlepaddle-gpu 2.6.0
   - paddlenlp 2.8.1
-- **模型实现框架**：
-  - SVM：scikit-learn
-  - BERT：PyTorch和Transformers库
+- **Model Implementation Framework**:
+  - SVM: scikit-learn
+  - BERT: PyTorch and Transformers library
 
-## 4.3 实施挑战与解决方案
+## 4.3 Implementation Challenges and Solutions
 
-在实验过程中，我们面临的主要挑战是诊断编码的分布不均衡问题，特别是其他诊断编码的分布极度不平衡。这种数据不平衡会导致模型偏向于学习主要诊断编码，而忽略其他诊断编码中的少数类别。为解决此问题，我们采用了两种互补的方法：
+The primary challenge during the experiments was the imbalanced distribution of diagnostic codes, especially the extremely imbalanced distribution of other diagnosis codes. This imbalance causes the model to focus on learning the main diagnostic code while neglecting the minority classes in other diagnosis codes. To address this, two complementary methods were adopted:
 
-### 4.3.1 类别权重调整
+### 4.3.1 Category Weight Adjustment
 
-为平衡不同类别的影响，我们引入了类别权重机制。对于多标签分类任务（其他诊断编码），我们根据各类别在训练集中的出现频率计算反比例权重，范围在1至500之间。这使得模型在训练过程中对稀有类别给予更高的关注度，如下图所示：
+To balance the impact of different categories, a category weighting mechanism is introduced. For the multi-label classification task (other diagnosis), inverse proportional weights are calculated based on the frequency of occurrence of each category in the training set, ranging from 1 to 500. This ensures that the model pays more attention to rare categories during training, as illustrated below:
 
-![pos_weights.png](pos_weights.png)
+- For each category:
+  - `total_samples - label2_counts` represents the number of negative samples (samples not belonging to the category).
+  - `label2_counts` represents the number of positive samples.
+  - `1e-6` is a small constant (ε) to prevent division by zero (in cases where no positive samples exist for a category).
 
-- 对于每个类别：
-  - `total_samples - label2_counts` 是负样本数（不属于该类别的样本数）。
-  - `label2_counts` 是正样本数。
-  - `1e-6` 是一个小值（ε），用于防止除以零（当某个类别没有正样本时）。
-
-公式如下：
+The formula is as follows:
 
 $$
 \text{pos weights}[j] = \frac{\text{total samples} - \text{label2 counts}[j]}{\text{label2 counts}[j] + 10^{-6}}
 $$
 
+This method effectively improves the recognition of low-frequency classes, thereby enhancing overall classification performance.
 
-这种方法有效提高了对低频类别的识别能力，从而改善了整体的分类性能。
+### 4.3.2 Uncertainty Weighted Loss Function
 
-### 4.3.2 不确定性加权损失函数
+To balance the single-label and multi-label classification tasks, the uncertainty weighted loss function proposed by Kendall et al. **[8]** is implemented. This method allows the model to automatically learn the optimal weight for each task without manual tuning.
 
-为处理单标签和多标签分类任务之间的平衡问题，我们实现了Kendall等人[8]提出的不确定性加权损失函数(Uncertainty to Weigh Losses)。这种方法允许模型自动学习每个任务的最优权重，而不需要手动调整。
+The implementation is as follows:
 
-具体实现如下：
-
-1. **单标签分类任务的损失函数**（交叉熵损失）：
-
-![单分类任务损失函数.png](单分类任务损失函数.png)
+1. **Loss Function for Single-label Classification (Cross-Entropy Loss)**:
 
 $$
 L_1 = -\frac{1}{N} \sum_{i=1}^{N} \sum_{c=1}^{C} y_{i,c} \log(\hat{p}_{i,c})
 $$
 
-#### 参数说明：
-- **$ N $**：样本总数。
-- **$ C $**：类别总数。
-- **$ y_{i,c} $**：样本 $i$ 在类别 $c$ 的真实标签（通常以 one-hot 形式表示）。
-- **$ \hat{p}_{i,c} $**：样本 $i$ 在类别 $c$ 的预测概率，计算方式为：
+#### Parameter Description:
+- **N**: Total number of samples.
+- **C**: Total number of classes.
+- **y_{i,c}**: The true label for sample i in class c (usually represented in one-hot encoding).
+- **$\hat{p}_{i,c}$**: The predicted probability for sample i in class c, calculated as:
   $$
   \hat{p}_{i,c} = \text{softmax}(\text{logits1})_{i,c}
   $$
 
-#### 备注：
-`softmax` 函数将 logits 转换为概率分布，确保 **$ \hat{p}_{i,c} $** 的值在 $[0, 1]$ 范围内。
+#### Note:
+The `softmax` function converts logits into a probability distribution, ensuring that **$\hat{p}_{i,c}$** falls within the range [0, 1].
 
-
-2. **多标签分类任务的损失函数**（带权重的二元交叉熵损失）：
-
-![多分类任务损失函数.png](多分类任务损失函数.png)
+2. **Loss Function for Multi-label Classification (Weighted Binary Cross-Entropy Loss)**:
 
 $$
 L_2 = -\frac{1}{N} \sum_{i=1}^{N} \left[ w_p \cdot y_i \cdot \log(\hat{p}_i) + (1 - y_i) \cdot \log(1 - \hat{p}_i) \right]
 $$
 
-#### 参数说明：
-- **$N$**: 样本数量。
-- **$y_i$**: 第 $i$ 个样本的真实标签（0 或 1）。
-- **$\hat{p}_i$**: 预测概率，计算方法为：
+#### Parameter Description:
+- **N**: Number of samples.
+- **y_i**: The true label of the i-th sample (0 or 1).
+- **$\hat{p}_i$**: The predicted probability, computed as:
   $$
   \hat{p}_i = \text{sigmoid}(\text{logits2}_i)
   $$
-- **$w_p$**: 正类权重，用于调整正负样本的不平衡。
+- **$w_p$**: The positive class weight, used to adjust the imbalance between positive and negative samples.
 
-#### 备注：
-这个公式适用于不平衡数据集中的二分类问题，通过权重 $w_p$ 对正负样本的重要性进行调整。
+#### Note:
+This formula is suited for binary classification problems in imbalanced datasets, adjusting the importance between positive and negative samples through the weight $w_p$.
 
-
-3. **综合损失函数**：
-
-![总损失函数.png](总损失函数.png)
+3. **Combined Loss Function**:
 
 $$
 L_{total} = \frac{L_1}{2\sigma_1^2} + \frac{L_2}{2\sigma_2^2} + \log(\sigma_1^2) + \log(\sigma_2^2)
 $$
 
-#### 参数说明：
-- $L_1$ 和 $L_2$ 表示两个部分的损失函数。
-- $\sigma_1^2$ 和 $\sigma_2^2$ 分别表示两个损失部分的方差。
-- $\log(\sigma_1^2)$ 和 $\log(\sigma_2^2)$ 是对方差的对数项，用于正则化或处理方差。
+#### Parameter Description:
+- **L_1** and **L_2** are the two components of the loss function.
+- **$\sigma_1^2$** and **$\sigma_2^2$** represent the variances of the loss components.
+- **$\log(\sigma_1^2)$** and **$\log(\sigma_2^2)$** are logarithmic terms used to regularize or manage the variances.
 
+Here, we set $\sigma_1$ as -1 for single-label classification and $\sigma_2$ as 1 for multi-label classification as the initial values. During training, these parameters are automatically adjusted via gradient descent, achieving a dynamic balance between the tasks.
 
-其中，我们设置单标签分类的$\sigma_1$为-1，多标签分类的$\sigma_2$为1，作为初始值。在训练过程中，这些参数会随着梯度下降自动调整，实现任务间的动态平衡。
+The introduction of this uncertainty weighted loss function significantly enhances the joint optimization of both tasks, improving the overall performance of the model on both classification tasks.
 
-这种不确定性加权损失函数的引入显著改善了两个任务的联合优化效果，提高了模型在两种分类任务上的整体性能。
+### 4.3.3 Front-end System Implementation and Challenges
 
-### 4.3.3 前端系统实现与挑战
-
-前端系统由以下主要组件构成：
-1. **模型初始化与加载**：负责加载预训练的BERT模型及其参数
-2. **测试数据加载**：从JSON文件中读取测试数据集
-3. **医疗记录选择与显示**：允许用户浏览和选择特定的病例记录
-4. **预测功能**：处理用户输入并生成相应的诊断编码预测
+The front-end system consists of the following key components:
+1. **Model Initialization and Loading**: Responsible for loading the pre-trained BERT model and its parameters.
+2. **Test Data Loading**: Reads the test dataset from a JSON file.
+3. **Medical Record Selection and Display**: Allows users to browse and select specific medical record cases.
+4. **Prediction Function**: Processes user inputs and generates corresponding diagnostic code predictions.
 
 ![frontEnd](frontEnd.jpg)
 
-在前端系统实现过程中，我们面临了以下技术挑战并提出了相应解决方案：
+During the implementation of the front-end system, we encountered the following technical challenges along with corresponding solutions:
 
-1. **模型加载性能问题**
-   - **挑战**：直接在页面加载期间初始化和加载大型BERT模型导致页面加载缓慢。
-   - **解决方案**：采用了延迟加载策略，仅在用户点击"预测"按钮时执行模型推理，并添加加载状态指示器，提升用户体验。
+1. **Model Loading Performance**
+   - **Challenge**: Initializing and loading the large BERT model during page load causes slow loading times.
+   - **Solution**: Implement a lazy loading strategy where model inference is executed only after the user clicks the "Predict" button, with a loading indicator added to enhance user experience.
 
-2. **长文本处理问题**
-   - **挑战**：医疗记录文本通常较长，可能超过BERT模型的最大输入长度（512个标记）。
-   - **解决方案**：在分词器中设置truncation=True参数，自动截断过长的文本，保留最重要的开头和结尾部分，确保关键信息得到保留。
+2. **Handling Long Text**
+   - **Challenge**: Medical record texts are typically long and may exceed the maximum input length of the BERT model (512 tokens).
+   - **Solution**: Configure the tokenizer with truncation=True to automatically truncate overly long texts, preserving the most important beginning and ending segments to retain key information.
 
-3. **多标签分类显示问题**
-   - **挑战**："其他诊断"是一个多标签分类任务，需要同时显示多个预测结果。
-   - **解决方案**：将多标签预测结果格式化为列表形式，便于用户查看，同时通过颜色编码区分不同的预测结果。
+3. **Multi-label Classification Display**
+   - **Challenge**: The "other diagnosis" task is a multi-label classification problem that requires displaying multiple prediction results simultaneously.
+   - **Solution**: Format the multi-label prediction results as a list for ease of viewing, and utilize color coding to distinguish between different predictions.
 
-4. **用户界面适配问题**
-   - **挑战**：医疗记录文本和预测结果较长，在不同屏幕尺寸下显示不一致。
-   - **解决方案**：利用Streamlit的响应式布局功能，并为长文本添加滚动条，确保在各种设备上都有良好的显示效果。
+4. **User Interface Adaptation**
+   - **Challenge**: The lengthy medical record texts and prediction results may not display consistently across different screen sizes.
+   - **Solution**: Use Streamlit's responsive layout features and add scrollbars for long texts to ensure optimal display on various devices.
 
-这些解决方案显著提高了系统的可用性和用户体验，使医疗专业人员能够更有效地使用该工具进行ICD诊断编码辅助。
+These solutions significantly improved the usability and user experience of the system, enabling medical professionals to use the tool more effectively for ICD diagnostic code assistance.

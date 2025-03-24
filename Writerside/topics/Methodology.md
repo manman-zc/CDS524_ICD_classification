@@ -1,130 +1,130 @@
 # 3 Methodology
 
-本研究旨在利用机器学习方法，特别是深度学习模型，对中文电子病历进行ICD诊断编码。本节将详细介绍本研究的方法论，包括研究设计、数据来源与预处理、模型选择与构建、实验设置以及评估指标。
+This study aims to use machine learning methods, particularly deep learning models, for performing ICD diagnostic coding on Chinese electronic medical records. This section details the methodology of this study, including the research design, data source and preprocessing, model selection and construction, experimental setup, and evaluation metrics.
 
-## 3.1 研究设计
+## 3.1 Research Design
 
-本研究采用监督学习的方法，构建一个多分类模型，用于预测中文电子病历的ICD诊断编码。具体而言，我们将电子病历文本作为输入，ICD诊断编码作为输出，通过训练模型学习文本与编码之间的映射关系。同时为了与该方法进行对比，我们加入了SVM作为传统机器学习方法作为实验的一部分。
+In this study, a supervised learning approach is adopted to build a multi-class model for predicting ICD diagnostic codes from Chinese electronic medical records. Specifically, the electronic medical records are used as input and the ICD codes as output, training the model to learn the mapping between texts and codes. For comparison, Support Vector Machine (SVM) is also introduced as a traditional machine learning method.
 
-下图为实现方法的流程图：
+Below is the flowchart of the implemented method:
 
 ![main_method](主要流程.png)
 
-## 3.2 数据来源与预处理
+## 3.2 Data Source and Preprocessing
 
-### 3.2.1 数据来源
+### 3.2.1 Data Source
 
-本研究使用的数据集来自2025年天池大赛中文电子病历ICD诊断编码评测，该数据集为脱敏后的病例数据。训练集包含800条病例，测试集包含200条病例。每个病例数据为JSON文件，包含14个字段，具体内容如下：
+The dataset used in this study comes from the 2025 Tianchi Competition on ICD diagnostic coding of Chinese electronic medical records. The data has been anonymized. The training set contains 800 cases, and the test set contains 200 cases. Each case is a JSON file containing 14 fields with the following contents:
 
--   **病案标识**：患者在医院就诊的唯一病案编号。
--   **主诉**：患者就医的主要原因。
--   **现病史**：当前疾病的发生、发展、演变过程的详细描述。
--   **既往史**：以往的健康状况和疾病史。
--   **个人史**：生活习惯、职业暴露、疫区接触等相关信息。
--   **婚姻史**：婚姻情况、结婚年龄、配偶健康情况、有无子女、性生活情况等。
--   **家族史**：直系亲属中是否存在遗传性疾病或特定疾病的病史。
--   **入院情况**：入院时的症状、体征和一般情况。
--   **入院诊断**：医生根据现病史和检查得出的初步诊断结果。
--   **诊疗经过**：在院期间所接受的检查、治疗和病情变化过程的详细记录。
--   **出院情况**：出院时的健康状况和恢复情况的简要描述。
--   **出院医嘱**：出院后生活、用药、复查等方面的指导。
--   **主诊断编码**：住院期间主要诊断所对应的标准化编码。
--   **其他诊断编码**：住院期间其他相关诊断所对应的标准化编码。
+-   **Medical Record ID**: The unique identifier of the patient's medical record during hospitalization.
+-   **Chief Complaint**: The primary reason for the patient’s visit.
+-   **Present Illness History**: A detailed description of the onset, development, and evolution of the current illness.
+-   **Past Medical History**: The patient’s previous health status and history of diseases.
+-   **Personal History**: Information on lifestyle habits, occupational exposures, contact with epidemic areas, etc.
+-   **Marital History**: Details of marital status, age at marriage, spouse’s health condition, whether the patient has children, and sexual history.
+-   **Family History**: The existence of hereditary diseases or specific conditions in immediate family members.
+-   **Admission Condition**: Symptoms, signs, and general condition upon admission.
+-   **Admission Diagnosis**: The preliminary diagnosis based on the current illness history and examinations.
+-   **Diagnosis and Treatment Process**: Detailed records of examinations, treatments, and changes in condition during hospitalization.
+-   **Discharge Condition**: A brief description of the patient’s health condition and recovery at discharge.
+-   **Discharge Instructions**: Guidelines for lifestyle, medication, and follow-up after discharge.
+-   **Primary Diagnosis Code**: The standardized code corresponding to the primary diagnosis during hospitalization.
+-   **Other Diagnosis Codes**: The standardized codes corresponding to other relevant diagnoses during hospitalization.
 
-对于训练集的主要诊断编码和其他诊断编码进行统计。
+Statistics are provided for both the primary diagnosis code and the other diagnosis codes in the training set.
 
-主要诊断编码的分布相对平均
+The distribution of the primary diagnosis codes is relatively uniform:
 
 ![primary_dc](primary_diagnosis_codes.png)
 
-而其他诊断编码分布差异很大
+In contrast, the distribution of the other diagnosis codes varies significantly:
 
 ![other_dc](other_diagnosis_codes.png)
 
-下表入院诊断与诊断编码在文本数据中一一对应的关系。
+The table below shows the correspondence between admission diagnosis and diagnosis codes in the text data.
 
-|            字段            |                             内容                             |
-| :------------------------: | :----------------------------------------------------------: |
-|          入院诊断          | 1.冠状动脉粥样硬化性心脏病不稳定型心绞痛2.高血压病（3级很高危）3.高脂血症4.甲状腺术后 |
-| 主要诊断编码 &其他诊断编码 |          I20.800x007 & I10.x00x032;E11.900;E78.500           |
+|                     Field                      |                     Content                     |
+|:----------------------------------------------:|:-----------------------------------------------:|
+|              Admission Diagnosis               | 1.冠状动脉粥样硬化性心脏病不稳定型心绞痛2.高血压病（3级很高危）3.高脂血症4.甲状腺术后 |
+| Primary Diagnosis Code & Other Diagnosis Codes |    I20.800x007 & I10.x00x032;E11.900;E78.500    |
 
-### 3.2.2 数据预处理
+### 3.2.2 Data Preprocessing
 
-由于原始电子病历文本数据包含大量非结构化信息，需要进行预处理才能用于模型训练。本研究采用以下预处理步骤：
+Since the raw electronic medical record texts contain a large amount of unstructured information, preprocessing is required before training the model. The following preprocessing steps are adopted:
 
-1.  **文本合并**：将主诉、现病史、入院情况、入院诊断中序号为1的文本、诊疗经过和出院情况合并为主要诊断的文本，将既往史、个人史、婚姻史、家族史、入院诊断除序号为1的文本、出院医嘱合并为其他诊断文本。
-2.  **实体抽取与关系抽取**：使用PaddleNLP中针对医疗文本处理的实体抽取与关系抽取的功能，抽取文本中的实体，包括疾病、症状、检查项目、治疗方法、身体部位、发病时间、药物和手术等。**[6]**
+1.  **Text Merging**: Merge the texts from Chief Complaint, Present Illness History, Admission Condition, the first text in Admission Diagnosis, Diagnosis and Treatment Process, and Discharge Condition into the primary diagnosis text. Merge the texts from Past Medical History, Personal History, Marital History, Family History, the texts in Admission Diagnosis except the first, and Discharge Instructions into the other diagnosis text.
+2.  **Entity and Relation Extraction**: Utilize the entity and relation extraction functionalities in PaddleNLP for medical text to extract entities such as diseases, symptoms, examination items, treatment methods, body parts, onset time, medications, and surgeries. **[6]**
 
-经过预处理后，电子病历文本被转换为结构化的数据，可以更好地用于模型训练。
+After preprocessing, the electronic medical record texts are converted into structured data that can be better utilized for model training.
 
-*展示处理前后的例子*
+*Example of before and after preprocessing*
 
-文本合并后处理前：
+Before merging texts:
 
 ![处理前.jpg](处理前.jpg)
 
-处理后：
+After processing:
 
 ![处理后.jpg](处理后.jpg)
 
-## 3.3 模型选择与构建
+## 3.3 Model Selection and Construction
 
-### 3.3.1 模型选择
+### 3.3.1 Model Selection
 
-本研究选择BERT模型作为基础模型。BERT（Bidirectional Encoder Representations from Transformers）是一种预训练的深度学习模型，在自然语言处理领域取得了state-of-the-art的效果 **[2]**。BERT模型通过Transformer **[5]** 的Encoder结构，能够捕捉文本中的上下文信息，从而更好地理解文本的语义。
+This study selects the BERT model as the base model. BERT (Bidirectional Encoder Representations from Transformers) is a pre-trained deep learning model that has achieved state-of-the-art performance in natural language processing **[2]**. BERT leverages the Transformer **[5]** encoder architecture to capture contextual information in the text, thereby better understanding the semantics.
 
-此外，为了验证深度学习模型的优势，我们选择支持向量机（Support Vector Machine, SVM）作为基线方法。SVM是一种经典的监督学习算法，在文本分类任务中表现良好。通过将文本特征映射到高维空间，SVM能够找到最优的分类超平面，实现文本的分类。在本研究中，我们使用TF-IDF（Term Frequency-Inverse Document Frequency）特征提取方法，将文本转换为向量表示，然后使用这些特征向量训练SVM模型。
+Additionally, to validate the advantages of deep learning models, Support Vector Machine (SVM) is employed as a baseline method. SVM is a classic supervised learning algorithm which performs well in text classification tasks. By mapping text features into a high-dimensional space, SVM can find the optimal classification hyperplane for text categorization. In this study, TF-IDF (Term Frequency-Inverse Document Frequency) is used to extract features, converting texts into vector representations which are then used to train the SVM model.
 
-### 3.3.2 模型构建
+### 3.3.2 Model Construction
 
-本研究使用预训练的BERT模型，并在其基础上添加一个全连接层和Softmax层，用于ICD诊断编码的分类。模型的具体结构如下：
+The study uses a pre-trained BERT model with an added fully connected layer and a Softmax layer for classifying ICD diagnostic codes. The model architecture is as follows:
 
-1.  **Embedding层**：将输入的文本转换为词向量。
-2.  **Positional Encoding层**：为词向量添加位置信息。
-3.  **Transformer Encoder层**：由12个编码器层组成，用于捕捉文本中的上下文信息。
-4.  **全连接层**：将Transformer Encoder层的输出映射到ICD诊断编码的维度。
-5.  **Softmax层**：计算每个ICD诊断编码的概率。
+1.  **Embedding Layer**: Converts input texts to word embeddings.
+2.  **Positional Encoding Layer**: Adds positional information to the word embeddings.
+3.  **Transformer Encoder Layer**: Consists of 12 encoder layers to capture contextual information in the text.
+4.  **Fully Connected Layer**: Maps the output from the Transformer encoder to the dimensions of the ICD diagnostic codes.
+5.  **Softmax Layer**: Calculates the probability for each ICD diagnostic code.
 
 ![BERT.png](BERT.png)
 
-其中，Transformer Encoder层由以下几个模块组成：
+The Transformer Encoder Layer consists of the following modules:
 
--   **Multi-Head Attention**：多头注意力机制，使用多个q、k、v矩阵对词向量进行Attention Score的计算和Attention Score的信息提取
--   **Feed Forward**：全连接的前馈神经网络
--   **Add&Norm**：是Residual和LayerNorm的组合：input加上output得到新的output，对新的output做Layer Norm（层归一化）
+-   **Multi-Head Attention**: Multi-head attention mechanism that uses multiple sets of q, k, v matrices to compute attention scores and extract information.
+-   **Feed Forward**: A fully connected feed-forward neural network.
+-   **Add & Norm**: A combination of residual connection and layer normalization: the input is added to the output to form a new output which is then normalized.
 
-### 3.3.3 技术栈与工具
+### 3.3.3 Technology Stack and Tools
 
-本项目的前端使用Streamlit框架实现，这对于机器学习和数据科学项目特别有用，能够快速开发交互式Web应用程序。技术栈包括：
+The frontend of this project is implemented using the Streamlit framework, which is particularly useful for machine learning and data science projects as it enables rapid development of interactive web applications. The technology stack includes:
 
-- **Streamlit**：用于构建交互式用户界面
-- **PyTorch**：深度学习框架，用于加载和运行预训练模型
-- **Transformers**：Hugging Face的库，用于加载预训练的BERT模型和分词器
-- **JSON**：用于数据交换和测试数据的存储
+- **Streamlit**: Used to build interactive user interfaces.
+- **PyTorch**: Deep learning framework for loading and running the pre-trained model.
+- **Transformers**: Hugging Face's library for loading pre-trained BERT models and tokenizers.
+- **JSON**: Used for data exchange and storing test data.
 
-### 3.3.4 系统设计与结构
+### 3.3.4 System Design and Architecture
 
-系统采用单页应用程序(SPA)设计理念，分为三个主要功能区域：
+The system follows a Single Page Application (SPA) design philosophy and is divided into three main functional areas:
 
-1. **模型加载区**：负责初始化模型并加载预训练参数
-2. **数据显示区**：显示测试医疗记录列表，并允许用户选择特定记录
-3. **预测结果区**：显示所选医疗记录的预测诊断结果
+1. **Model Loading Area**: Responsible for initializing the model and loading pre-trained parameters.
+2. **Data Display Area**: Displays the list of test medical records and allows users to select a specific record.
+3. **Prediction Results Area**: Shows the predicted diagnostic results for the selected medical record.
 
-在前端界面中，数据处理包括以下步骤：
+Data processing in the frontend involves the following steps:
 
-1. **测试数据加载**：从JSON文件加载测试数据集
-2. **文本预处理**：使用BERT分词器对患者医疗记录文本进行分词和编码，包括：
-   - 将文本截断或填充到固定长度(512)
-   - 添加特殊标记([CLS], [SEP])
-   - 生成注意力掩码和标记类型ID
-3. **预测后处理**：将模型输出概率转换为诊断编码
+1. **Loading Test Data**: Load the test dataset from JSON files.
+2. **Text Preprocessing**: Use the BERT tokenizer to segment and encode patient record texts, including:
+   - Truncating or padding texts to a fixed length (512).
+   - Adding special tokens ([CLS], [SEP]).
+   - Generating attention masks and token type IDs.
+3. **Post-processing Predictions**: Convert the model's output probabilities into diagnostic codes.
 
-## 3.4 评估指标
+## 3.4 Evaluation Metrics
 
-本研究采用中文电子病历ICD诊断编码任务采用正确率（Acc）作为评测指标，计算公式如下：
+For the ICD diagnostic coding task on Chinese electronic medical records, this study uses Accuracy (Acc) as the evaluation metric, calculated as follows:
 
 $$
 Acc = \frac{1}{N} \sum_{i=1}^{N} \left\{ 0.5 \cdot I(\hat{y}_{main} == y_{main}) + 0.5 \cdot \frac{NUM(y_{other} \cap \hat{y}_{other})}{NUM(y_{other})} \right\}_{i}
 $$
 
-其中，$I(\cdot)$为指示函数，满足条件返回1，否则返回0，$\hat{y}_{main}$和$y_{main}$分别表示主诊断编码的预测标签和真实标签；$NUM(x)$代表数量函数，用来计算$x$的数量，$\hat{y}_{other}$和$y_{other}$分别表示其他诊断编码的预测标签集和真实标签集；$N$为测试样本的数量，$\left\{\cdot\right\}_{i}$为第$i$个中文电子病历的预测准确率。
+Here, $I(\cdot)$ is an indicator function which returns 1 if the condition is met, and 0 otherwise; $\hat{y}_{main}$ and $y_{main}$ represent the predicted and true labels for the primary diagnosis respectively; $NUM(x)$ denotes a function that counts the number of elements in $x$; $\hat{y}_{other}$ and $y_{other}$ represent the sets of predicted and true labels for the other diagnoses; $N$ is the total number of test samples, and $\left\{\cdot\right\}_{i}$ denotes the prediction accuracy for the i-th electronic medical record.
