@@ -67,7 +67,7 @@
 
 **Role**: 
 
-- Summarize and summarize the project
+- Summarize the project
 
 - Conduct in-depth research on the model to provide theoretical support for the project.
 
